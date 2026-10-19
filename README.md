@@ -30,15 +30,14 @@ so it never comes back, then merge to publish.
   "Allow GitHub Actions to create and approve pull requests".
 - To add a mention by hand, add an entry to `mentions` in `press.json`.
 
-## Connect the inquiry form (Formspree, free tier: 50 submissions/month)
-1. Sign up at https://formspree.io with the email where you want leads delivered.
-2. Create a new form and copy its endpoint (looks like `https://formspree.io/f/abcdwxyz`).
-3. Paste it into `FORM_ENDPOINT` in `script.js`.
+## Inquiry form
+Submissions go to Formspree (`FORM_ENDPOINT` in `script.js`, form `moejzdbn`) and are emailed to you
+with the subject "New inquiry from alessandromannino.com". Manage the form and see past submissions
+at https://formspree.io. The free tier allows 50 submissions a month.
 
-## Deploy to GitHub Pages
-1. Create a public repo on GitHub (e.g. `alessandromannino.com`) and push these files to `main`.
-2. Repo → Settings → Pages → Source: "Deploy from a branch", branch `main`, folder `/ (root)`.
-3. At your domain registrar, set DNS:
-   - `A` records for `@` → `185.199.108.153`, `185.199.109.153`, `185.199.110.153`, `185.199.111.153`
-   - `CNAME` record for `www` → your GitHub Pages host (`<username>.github.io`)
-4. Back in Settings → Pages, confirm the custom domain and tick "Enforce HTTPS" once the certificate is issued.
+## Hosting
+- Repo: https://github.com/palermomia/alessandromannino.com (GitHub Pages from `main`, root folder).
+  Every push to `main` redeploys the site in about a minute.
+- Domain: registered at Namecheap. DNS has four `A` records for `@` (185.199.108–111.153),
+  `www` → `palermomia.github.io.`, the GitHub domain-verification TXT record, and a Google
+  Search Console TXT record. HTTPS is enforced.

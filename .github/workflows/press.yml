@@ -1,0 +1,29 @@
+name: Find new press mentions
+
+on:
+  schedule:
+    - cron: '0 13 * * 1' # Mondays, 9am New York time
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  find-press:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node scripts/find-press.mjs
+      - uses: peter-evans/create-pull-request@v7
+        with:
+          branch: press/new-mentions
+          commit-message: Add new press mentions
+          title: New press mentions found
+          body: |
+            The weekly press finder found new mentions and added them to `press.json`.
+            Check each one is really about you, delete any that aren't (or move their URL to `ignored`), then merge to publish.
+          delete-branch: true

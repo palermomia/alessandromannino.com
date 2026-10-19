@@ -1,6 +1,5 @@
-// Formspree endpoint for the inquiry form. Create a free form at https://formspree.io
-// (sign up with the email where you want leads delivered) and paste its endpoint here.
-const FORM_ENDPOINT = 'https://formspree.io/f/YOUR_FORM_ID';
+// Formspree endpoint for the inquiry form (submissions are emailed to Alessandro)
+const FORM_ENDPOINT = 'https://formspree.io/f/moejzdbn';
 
 const root = document.documentElement;
 root.classList.remove('no-js');
@@ -183,11 +182,6 @@ form.addEventListener('submit', async (event) => {
     return;
   }
 
-  if (FORM_ENDPOINT.includes('YOUR_FORM_ID')) {
-    setStatus('The form isn\'t connected yet. Add the Formspree endpoint in script.js.', 'err');
-    return;
-  }
-
   button.disabled = true;
   buttonLabel.textContent = 'Sending…';
   setStatus('');
@@ -198,11 +192,16 @@ form.addEventListener('submit', async (event) => {
       body: new FormData(form),
       headers: { Accept: 'application/json' },
     });
-    if (!res.ok) throw new Error('Request failed: ' + res.status);
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}));
+      const detail = (data.errors || []).map((e) => e.message).join(' ');
+      throw new Error(detail || 'Request failed: ' + res.status);
+    }
     form.reset();
     setStatus('Got it, grazie! I\'ll be in touch soon.', 'ok');
   } catch (err) {
-    setStatus('That didn\'t send. Mind trying again in a moment?', 'err');
+    const detail = err.message.startsWith('Request failed') ? '' : ' ' + err.message;
+    setStatus('That didn\'t send.' + detail + ' Mind trying again in a moment?', 'err');
   } finally {
     button.disabled = false;
     buttonLabel.textContent = 'Send it';
